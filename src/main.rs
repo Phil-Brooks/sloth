@@ -107,6 +107,8 @@ fn main() {
             };
             //let best_move: String = searcher.get_best_move(&board, time_remaining);
             //println!("bestmove {}", best_move);
+        } else if input.starts_with("eval") {
+            println!("eval: {}cp", network::eval_from_scratch(&board));
         } else if input.starts_with("quit") {
             break;
         } else {

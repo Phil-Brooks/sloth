@@ -2,7 +2,7 @@ use std::usize;
 
 use cozy_chess::*;
 
-pub const SEE_VALS: [i32; 8] = [0, 0, 100, 450, 450, 650, 1250, 0];
+pub const SEE_VALS: [i32; 6] = [100, 450, 450, 650, 1250, 0];
 
 const HIDDEN: usize = 1024;
 const SCALE: i32 = 400;
