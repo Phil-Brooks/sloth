@@ -1,0 +1,151 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="`cozy-chess`"><title>cozy_chess - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="cozy_chess" data-themes="" data-resource-suffix="" data-rustdoc-version="1.87.0 (17067e9ac 2025-05-09)" data-channel="1.87.0" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../static.files/storage-82c7156e.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../cozy_chess/index.html">cozy_<wbr>chess</a><span class="version">0.3.4</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#cozy-chess" title="`cozy-chess`"><code>cozy-chess</code></a><ul><li><a href="#rust-chess-and-chess960-move-generation-library" title="Rust Chess and Chess960 move generation library">Rust Chess and Chess960 move generation library</a></li><li><a href="#overview" title="Overview">Overview</a></li><li><a href="#crate-features" title="Crate features">Crate features</a></li><li><a href="#a-note-on-cpu-features-and-performance" title="A note on CPU features and performance">A note on CPU features and performance</a></li><li><a href="#a-note-on-uci-parsing" title="A note on UCI parsing">A note on UCI parsing</a></li><li><a href="#examples" title="Examples">Examples</a></li><li><a href="#changelog" title="Changelog">Changelog</a></li></ul></li></ul><h3><a href="#modules">Crate Items</a></h3><ul class="block"><li><a href="#modules" title="Modules">Modules</a></li><li><a href="#macros" title="Macros">Macros</a></li><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#enums" title="Enums">Enums</a></li><li><a href="#functions" title="Functions">Functions</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Crate <span>cozy_chess</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/cozy_chess/lib.rs.html#1-21">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="cozy-chess"><a class="doc-anchor" href="#cozy-chess">§</a><code>cozy-chess</code></h2><h3 id="rust-chess-and-chess960-move-generation-library"><a class="doc-anchor" href="#rust-chess-and-chess960-move-generation-library">§</a>Rust Chess and Chess960 move generation library</h3><a href="https://crates.io/crates/cozy-chess">
+    <img
+        src="https://img.shields.io/crates/v/cozy-chess.svg"
+        alt="crates.io"
+        height="24em"
+    >
+</a>
+<a href="https://ko-fi.com/P5P2JWI4P">
+    <img
+        src="https://img.shields.io/badge/Ko--fi-Support%20me%20on%20Ko--fi-FF5E5B?logo=kofi&logoColor=white"
+        alt="ko-fi"
+        height="24em"
+    >
+</a>
+<span>
+    <img
+        src="https://raw.githubusercontent.com/analog-hors/cozy-chess/45ba7a253ed82c5e9f3004d224cfab19473fcee7/img/lgbtq_badge.svg"
+        alt="lgbtq+ friendly"
+        height="24em"
+    >
+</span>
+<span>
+    <img
+        src="https://raw.githubusercontent.com/analog-hors/cozy-chess/45ba7a253ed82c5e9f3004d224cfab19473fcee7/img/trans_badge.svg"
+        alt="trans rights"
+        height="24em"
+    >
+</span>
+<p><code>cozy-chess</code> is a Chess and Chess960 (Fischer Random Chess) move generation library written in Rust that aims to provide competitive move generation performance. It is largely inspired by Jordan Bray’s neat <a href="https://github.com/jordanbray/chess"><code>chess</code></a> library. <code>cozy-chess</code> aims to be a safer alternative to <code>chess</code> that maintains correctness while providing similar performance.</p>
+<h3 id="overview"><a class="doc-anchor" href="#overview">§</a>Overview</h3>
+<ul>
+<li><code>no_std</code> compatible</li>
+<li>Supports Chess, Chess960/FRC, and Double Chess960/DFRC</li>
+<li>Strongly-typed API that makes heavy use of newtypes to avoid errors</li>
+<li>Performant legal move generation suitable for use in a chess engine
+<ul>
+<li>Implements fixed shift fancy black magic bitboards</li>
+<li>Optionally implements PEXT bitboards based on the BMI2 intrinsic</li>
+<li>Flexible API produces moves in bulk for optional bulk filtering</li>
+</ul>
+</li>
+<li>Efficient bitboard-based board representation</li>
+<li>Incrementally updated zobrist hash for quickly obtaining a hash of a board</li>
+</ul>
+<h3 id="crate-features"><a class="doc-anchor" href="#crate-features">§</a>Crate features</h3>
+<ul>
+<li><code>std</code>: Enable features that require <code>std</code>. Currently only used for the <code>Error</code> trait.</li>
+<li><code>pext</code>: Enable PEXT bitboards.</li>
+</ul>
+<h3 id="a-note-on-cpu-features-and-performance"><a class="doc-anchor" href="#a-note-on-cpu-features-and-performance">§</a>A note on CPU features and performance</h3>
+<p>By default, Rust binaries target a baseline CPU to ensure maximum compatibility at the cost of performance. <code>cozy-chess</code> benefits significantly from features present in modern CPUs. For maximum performance, the target CPU can instead be set to <code>native</code> to use features supported by the machine running the build. Alternatively, the target CPU can be set to <code>x86-64-v3</code>, which will produce binaries that run on most modern CPUs. The target CPU may be changed by adding <code>-C target-cpu=&lt;CPU&gt;</code> to <code>RUSTFLAGS</code>.</p>
+<p>PEXT bitboards are a faster variant of the magic bitboard algorithm used by <code>cozy-chess</code>. PEXT bitboards rely on an intrinsic introduced in the <a href="https://en.wikipedia.org/wiki/X86_Bit_manipulation_instruction_set">BMI2 CPU extension</a>. However, it is not enabled by default, as PEXT bitboards are <em>slower</em> on AMD CPUs prior to Zen 3, which implement PEXT with microcode. PEXT bitboards can be enabled through the <code>pext</code> feature.</p>
+<h3 id="a-note-on-uci-parsing"><a class="doc-anchor" href="#a-note-on-uci-parsing">§</a>A note on UCI parsing</h3>
+<p>In order to support Chess960, <code>cozy-chess</code> uses a king-captures-rook castling notation incompatible with the standard castling representation used by the UCI protocol. This is a common use case, so the <code>cozy_chess::util</code> module provides helpers that automatically parse and convert between the formats.</p>
+<h3 id="examples"><a class="doc-anchor" href="#examples">§</a>Examples</h3><h4 id="basic-example"><a class="doc-anchor" href="#basic-example">§</a>Basic example</h4>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="comment">// Start position
+</span><span class="kw">let </span>board = Board::default();
+<span class="kw">let </span><span class="kw-2">mut </span>move_list = Vec::new();
+board.generate_moves(|moves| {
+    <span class="comment">// Unpack dense move set into move list
+    </span>move_list.extend(moves);
+    <span class="bool-val">false
+</span>});
+<span class="macro">assert_eq!</span>(move_list.len(), <span class="number">20</span>);</code></pre></div>
+<h4 id="get-capture-moves-in-bulk"><a class="doc-anchor" href="#get-capture-moves-in-bulk">§</a>Get capture moves in bulk</h4>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="comment">// Parse position from FEN
+</span><span class="kw">let </span>board = <span class="string">"r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"
+    </span>.parse::&lt;Board&gt;()
+    .unwrap();
+
+<span class="kw">let </span><span class="kw-2">mut </span>total_moves = <span class="number">0</span>;
+<span class="kw">let </span><span class="kw-2">mut </span>total_captures = <span class="number">0</span>;
+
+<span class="kw">let </span>enemy_pieces = board.colors(!board.side_to_move());
+board.generate_moves(|moves| {
+    <span class="kw">let </span><span class="kw-2">mut </span>captures = moves.clone();
+    <span class="comment">// Bitmask to efficiently get all captures set-wise.
+    // Excluding en passant square for convenience.
+    </span>captures.to &amp;= enemy_pieces;
+
+    total_moves += moves.len();
+    total_captures += captures.len();
+    <span class="bool-val">false
+</span>});
+
+<span class="macro">assert_eq!</span>(total_moves, <span class="number">48</span>);
+<span class="macro">assert_eq!</span>(total_captures, <span class="number">8</span>);</code></pre></div>
+<h4 id="perft-example"><a class="doc-anchor" href="#perft-example">§</a>Perft example</h4>
+<p>A <a href="https://www.chessprogramming.org/Perft">perft</a> implementation exists in <code>examples/perft.rs</code>:</p>
+<div class="example-wrap"><pre class="language-text"><code>$ cargo run --release --example perft -- 7
+   Compiling cozy-chess v0.3.0
+    Finished release [optimized] target(s) in 6.37s
+     Running `target\release\examples\perft.exe 7`
+3195901860 nodes in 10.05s (318045465 nps)</code></pre></div><h3 id="changelog"><a class="doc-anchor" href="#changelog">§</a>Changelog</h3><h4 id="v034"><a class="doc-anchor" href="#v034">§</a>v0.3.4</h4><h5 id="added"><a class="doc-anchor" href="#added">§</a>Added</h5>
+<ul>
+<li>Added helper methods for handling UCI moves.</li>
+<li>Added <code>Square::relative_to</code> to get a square relative to some color.</li>
+</ul>
+<h4 id="v033"><a class="doc-anchor" href="#v033">§</a>v0.3.3</h4><h5 id="added-1"><a class="doc-anchor" href="#added-1">§</a>Added</h5>
+<ul>
+<li>Added setters for the halfmove clock and fullmove number fields.</li>
+</ul>
+<h5 id="fixed"><a class="doc-anchor" href="#fixed">§</a>Fixed</h5>
+<ul>
+<li>Fixed checkmate not taking precedence over 50 move rule draw.</li>
+<li>Fixed possible overflows on halfmove clock and fullmove number.</li>
+</ul>
+<h4 id="v032"><a class="doc-anchor" href="#v032">§</a>v0.3.2</h4><h5 id="fixed-1"><a class="doc-anchor" href="#fixed-1">§</a>Fixed</h5>
+<ul>
+<li>Fixed bug where en passant was not correctly validated when parsing and building <code>Board</code>s.</li>
+</ul>
+<h4 id="v031"><a class="doc-anchor" href="#v031">§</a>v0.3.1</h4><h5 id="fixed-2"><a class="doc-anchor" href="#fixed-2">§</a>Fixed</h5>
+<ul>
+<li>Fixed bug where <code>Board::is_legal</code> said castles while in check were legal.</li>
+</ul>
+<h4 id="v030"><a class="doc-anchor" href="#v030">§</a>v0.3.0</h4><h5 id="added-2"><a class="doc-anchor" href="#added-2">§</a>Added</h5>
+<ul>
+<li>Added methods for obtaining Chess960 start positions from their Scharnagl number.</li>
+<li>Added PEXT bitboards using the BMI2 PEXT intrinsic. Potentially faster than the default algorithm. Enable using the <code>pext</code> feature.</li>
+<li>Added <code>Board::hash_without_ep</code> method for fast equivalence checks excluding the en passant square.</li>
+<li>Added <code>Board::same_position</code> to check if two boards are equivalent under FIDE rules.</li>
+<li>Added <code>Board::colored_pieces</code>, a shorthand for <code>board.colors(color) &amp; board.pieces(piece)</code>.</li>
+<li>Added <code>BitBoard::is_subset</code>, <code>BitBoard::is_superset</code>, and <code>BitBoard::is_disjoint</code>.</li>
+</ul>
+<h5 id="changed-breaking"><a class="doc-anchor" href="#changed-breaking">§</a>Changed (<strong>breaking</strong>)</h5>
+<ul>
+<li><code>BitBoard</code>s now operate in a more set-wise manner instead of acting like a <code>u64</code>. Bit operators changed to match set operators.</li>
+<li><code>BitBoard::popcnt</code> renamed to <code>BitBoard::len</code> for consistency with other data structures.</li>
+<li><code>BoardBuilder</code>’s <code>fullmove_number</code> field changed to a <code>u16</code> for usability reasons.</li>
+<li><code>Board</code>’s <code>FromStr</code> implementation now parses both FEN and Shredder FEN.</li>
+</ul>
+<h5 id="removed-breaking"><a class="doc-anchor" href="#removed-breaking">§</a>Removed (<strong>breaking</strong>)</h5>
+<ul>
+<li><code>BitBoard</code> no longer implements <code>Iterator</code> directly.</li>
+<li>Sliding move functions are no longer <code>const</code> by default; Use the <code>const</code> variants if required.</li>
+<li>Unnecessary “try” variants on <code>Board</code> removed; The risk of panicking is accepted when <code>*_unchecked</code> methods are called.</li>
+</ul>
+<h5 id="fixed-3"><a class="doc-anchor" href="#fixed-3">§</a>Fixed</h5>
+<ul>
+<li>Overflow bug in <code>Square::try_offset</code> fixed.</li>
+<li><code>FenParseError</code> is no longer unnameable.</li>
+<li>Fixed incorrect errors being returned in FEN parsing.</li>
+<li>Fixed some errors not being produced in FEN parsing.</li>
+</ul>
+</div></details><h2 id="modules" class="section-header">Modules<a href="#modules" class="anchor">§</a></h2><dl class="item-table"><dt><a class="mod" href="util/index.html" title="mod cozy_chess::util">util</a></dt><dd>Additional common utilities</dd></dl><h2 id="macros" class="section-header">Macros<a href="#macros" class="anchor">§</a></h2><dl class="item-table"><dt><a class="macro" href="macro.bitboard.html" title="macro cozy_chess::bitboard">bitboard</a></dt><dd><a href="struct.BitBoard.html" title="struct cozy_chess::BitBoard"><code>BitBoard</code></a> literal macro.</dd></dl><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.BitBoard.html" title="struct cozy_chess::BitBoard">BitBoard</a></dt><dd>A <a href="https://www.chessprogramming.org/Bitboards">bitboard</a>.
+A bitboard is an ordered set of squares.</dd><dt><a class="struct" href="struct.BitBoardIter.html" title="struct cozy_chess::BitBoardIter">BitBoard<wbr>Iter</a></dt><dd>An iterator over the squares of a bitboard.</dd><dt><a class="struct" href="struct.BitBoardSubsetIter.html" title="struct cozy_chess::BitBoardSubsetIter">BitBoard<wbr>Subset<wbr>Iter</a></dt><dd>An iterator over the subsets of a bitboard.</dd><dt><a class="struct" href="struct.Board.html" title="struct cozy_chess::Board">Board</a></dt><dd>A chessboard.</dd><dt><a class="struct" href="struct.BoardBuilder.html" title="struct cozy_chess::BoardBuilder">Board<wbr>Builder</a></dt><dd>A board builder to manipulate arbitrary boards.</dd><dt><a class="struct" href="struct.CastleRights.html" title="struct cozy_chess::CastleRights">Castle<wbr>Rights</a></dt><dd>Castling rights.</dd><dt><a class="struct" href="struct.ColorParseError.html" title="struct cozy_chess::ColorParseError">Color<wbr>Parse<wbr>Error</a></dt><dd>The value was not a valid <a href="enum.Color.html" title="enum cozy_chess::Color"><code>Color</code></a>.</dd><dt><a class="struct" href="struct.FileParseError.html" title="struct cozy_chess::FileParseError">File<wbr>Parse<wbr>Error</a></dt><dd>The value was not a valid <a href="enum.File.html" title="enum cozy_chess::File"><code>File</code></a>.</dd><dt><a class="struct" href="struct.IllegalMoveError.html" title="struct cozy_chess::IllegalMoveError">Illegal<wbr>Move<wbr>Error</a></dt><dd>An error returned when the move played was illegal.</dd><dt><a class="struct" href="struct.Move.html" title="struct cozy_chess::Move">Move</a></dt><dd>A chess move.</dd><dt><a class="struct" href="struct.MoveParseError.html" title="struct cozy_chess::MoveParseError">Move<wbr>Parse<wbr>Error</a></dt><dd>The value was not a valid <a href="struct.Move.html" title="struct cozy_chess::Move"><code>Move</code></a>.</dd><dt><a class="struct" href="struct.PieceMoves.html" title="struct cozy_chess::PieceMoves">Piece<wbr>Moves</a></dt><dd>A compact structure representing multiple moves for a piece on the board.
+Iterate it to unpack its moves.</dd><dt><a class="struct" href="struct.PieceMovesIter.html" title="struct cozy_chess::PieceMovesIter">Piece<wbr>Moves<wbr>Iter</a></dt><dd>Iterator over the moves in a <a href="struct.PieceMoves.html" title="struct cozy_chess::PieceMoves"><code>PieceMoves</code></a> instance.</dd><dt><a class="struct" href="struct.PieceParseError.html" title="struct cozy_chess::PieceParseError">Piece<wbr>Parse<wbr>Error</a></dt><dd>The value was not a valid <a href="enum.Piece.html" title="enum cozy_chess::Piece"><code>Piece</code></a>.</dd><dt><a class="struct" href="struct.RankParseError.html" title="struct cozy_chess::RankParseError">Rank<wbr>Parse<wbr>Error</a></dt><dd>The value was not a valid <a href="enum.Rank.html" title="enum cozy_chess::Rank"><code>Rank</code></a>.</dd><dt><a class="struct" href="struct.SquareParseError.html" title="struct cozy_chess::SquareParseError">Square<wbr>Parse<wbr>Error</a></dt><dd>The value was not a valid <a href="enum.Square.html" title="enum cozy_chess::Square"><code>Square</code></a>.</dd></dl><h2 id="enums" class="section-header">Enums<a href="#enums" class="anchor">§</a></h2><dl class="item-table"><dt><a class="enum" href="enum.BoardBuilderError.html" title="enum cozy_chess::BoardBuilderError">Board<wbr>Builder<wbr>Error</a></dt><dd>An error while building a board.</dd><dt><a class="enum" href="enum.Color.html" title="enum cozy_chess::Color">Color</a></dt><dd>A side to move.</dd><dt><a class="enum" href="enum.FenParseError.html" title="enum cozy_chess::FenParseError">FenParse<wbr>Error</a></dt><dd>An error while parsing the FEN.</dd><dt><a class="enum" href="enum.File.html" title="enum cozy_chess::File">File</a></dt><dd>A file on a chessboard.</dd><dt><a class="enum" href="enum.GameStatus.html" title="enum cozy_chess::GameStatus">Game<wbr>Status</a></dt><dd>The current state of the game.</dd><dt><a class="enum" href="enum.Piece.html" title="enum cozy_chess::Piece">Piece</a></dt><dd>A chess piece.
+Pieces are ordered by approximate material value.</dd><dt><a class="enum" href="enum.Rank.html" title="enum cozy_chess::Rank">Rank</a></dt><dd>A rank on a chessboard.</dd><dt><a class="enum" href="enum.Square.html" title="enum cozy_chess::Square">Square</a></dt><dd>A square on a chessboard.
+Squares are ordered in rank-major order (A1, B1, C1, … H8).</dd></dl><h2 id="functions" class="section-header">Functions<a href="#functions" class="anchor">§</a></h2><dl class="item-table"><dt><a class="fn" href="fn.get_between_rays.html" title="fn cozy_chess::get_between_rays">get_<wbr>between_<wbr>rays</a></dt><dd>Get all squares between two squares, if reachable via a ray.</dd><dt><a class="fn" href="fn.get_bishop_moves.html" title="fn cozy_chess::get_bishop_moves">get_<wbr>bishop_<wbr>moves</a></dt><dd>Get the moves for a bishop on some square.
+See <a href="fn.get_bishop_moves_const.html" title="fn cozy_chess::get_bishop_moves_const"><code>get_bishop_moves_const</code></a> for a significantly slower <code>const</code> variant.</dd><dt><a class="fn" href="fn.get_bishop_moves_const.html" title="fn cozy_chess::get_bishop_moves_const">get_<wbr>bishop_<wbr>moves_<wbr>const</a></dt><dd>Significantly slower <code>const</code> version of <a href="fn.get_bishop_moves.html" title="fn cozy_chess::get_bishop_moves"><code>get_bishop_moves</code></a>.</dd><dt><a class="fn" href="fn.get_bishop_rays.html" title="fn cozy_chess::get_bishop_rays">get_<wbr>bishop_<wbr>rays</a></dt><dd>Get the rays for a bishop on some square.</dd><dt><a class="fn" href="fn.get_king_moves.html" title="fn cozy_chess::get_king_moves">get_<wbr>king_<wbr>moves</a></dt><dd>Get the king moves for a king on some square.</dd><dt><a class="fn" href="fn.get_knight_moves.html" title="fn cozy_chess::get_knight_moves">get_<wbr>knight_<wbr>moves</a></dt><dd>Get the knight moves for a knight on some square.</dd><dt><a class="fn" href="fn.get_line_rays.html" title="fn cozy_chess::get_line_rays">get_<wbr>line_<wbr>rays</a></dt><dd>Get a ray on the board that passes through both squares, if it exists.</dd><dt><a class="fn" href="fn.get_pawn_attacks.html" title="fn cozy_chess::get_pawn_attacks">get_<wbr>pawn_<wbr>attacks</a></dt><dd>Get the pawn attacks for a pawn on some square.</dd><dt><a class="fn" href="fn.get_pawn_quiets.html" title="fn cozy_chess::get_pawn_quiets">get_<wbr>pawn_<wbr>quiets</a></dt><dd>Get the pawn forward moves/non-captures for a pawn of some color on some square.</dd><dt><a class="fn" href="fn.get_rook_moves.html" title="fn cozy_chess::get_rook_moves">get_<wbr>rook_<wbr>moves</a></dt><dd>Get the moves for a rook on some square.
+See <a href="fn.get_rook_moves_const.html" title="fn cozy_chess::get_rook_moves_const"><code>get_rook_moves_const</code></a> for a significantly slower <code>const</code> variant.</dd><dt><a class="fn" href="fn.get_rook_moves_const.html" title="fn cozy_chess::get_rook_moves_const">get_<wbr>rook_<wbr>moves_<wbr>const</a></dt><dd>Significantly slower <code>const</code> version of <a href="fn.get_rook_moves.html" title="fn cozy_chess::get_rook_moves"><code>get_rook_moves</code></a>.</dd><dt><a class="fn" href="fn.get_rook_rays.html" title="fn cozy_chess::get_rook_rays">get_<wbr>rook_<wbr>rays</a></dt><dd>Get the rays for a rook on some square.</dd></dl></section></div></main></body></html>

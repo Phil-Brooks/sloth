@@ -1,0 +1,3 @@
+var srcIndex = new Map(JSON.parse('[["cozy_chess",["",[["board",[["movegen",[],["mod.rs","piece_moves.rs"]]],["builder.rs","mod.rs","parse.rs","validate.rs","zobrist.rs"]],["util",[],["mod.rs"]]],["lib.rs","moves.rs"]]],["cozy_chess_types",["",[["sliders",[],["common.rs","magic.rs","mod.rs"]]],["bitboard.rs","castling.rs","chess_move.rs","color.rs","file.rs","helpers.rs","lib.rs","piece.rs","rank.rs","square.rs"]]],["sloth",["",[],["main.rs"]]]]'));
+createSrcSidebar();
+//{"start":36,"fragment_lengths":[183,199,30]}

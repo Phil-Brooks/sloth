@@ -1,0 +1,9 @@
+(function() {
+    var implementors = Object.fromEntries([["cozy_chess_types",[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.87.0/core/convert/trait.TryFrom.html\" title=\"trait core::convert::TryFrom\">TryFrom</a>&lt;<a class=\"primitive\" href=\"https://doc.rust-lang.org/1.87.0/core/primitive.char.html\">char</a>&gt; for <a class=\"enum\" href=\"cozy_chess_types/color/enum.Color.html\" title=\"enum cozy_chess_types::color::Color\">Color</a>"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.87.0/core/convert/trait.TryFrom.html\" title=\"trait core::convert::TryFrom\">TryFrom</a>&lt;<a class=\"primitive\" href=\"https://doc.rust-lang.org/1.87.0/core/primitive.char.html\">char</a>&gt; for <a class=\"enum\" href=\"cozy_chess_types/file/enum.File.html\" title=\"enum cozy_chess_types::file::File\">File</a>"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.87.0/core/convert/trait.TryFrom.html\" title=\"trait core::convert::TryFrom\">TryFrom</a>&lt;<a class=\"primitive\" href=\"https://doc.rust-lang.org/1.87.0/core/primitive.char.html\">char</a>&gt; for <a class=\"enum\" href=\"cozy_chess_types/piece/enum.Piece.html\" title=\"enum cozy_chess_types::piece::Piece\">Piece</a>"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.87.0/core/convert/trait.TryFrom.html\" title=\"trait core::convert::TryFrom\">TryFrom</a>&lt;<a class=\"primitive\" href=\"https://doc.rust-lang.org/1.87.0/core/primitive.char.html\">char</a>&gt; for <a class=\"enum\" href=\"cozy_chess_types/rank/enum.Rank.html\" title=\"enum cozy_chess_types::rank::Rank\">Rank</a>"]]]]);
+    if (window.register_implementors) {
+        window.register_implementors(implementors);
+    } else {
+        window.pending_implementors = implementors;
+    }
+})()
+//{"start":57,"fragment_lengths":[1552]}

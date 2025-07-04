@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["SLIDING_MOVE_TABLE_SIZE"],"fn":["get_bishop_moves_index","get_bishop_moves_slow","get_bishop_relevant_blockers","get_rook_moves_index","get_rook_moves_slow","get_rook_relevant_blockers"]};

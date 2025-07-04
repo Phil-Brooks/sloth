@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["display_san_move","display_uci_move","parse_san_move","parse_uci_move"]};

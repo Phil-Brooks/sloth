@@ -1,0 +1,1 @@
+searchState.loadedDescShard("sloth", 0, "Sloth - Rust chess engine\nMain entry point - currently handles UCI. This will …")

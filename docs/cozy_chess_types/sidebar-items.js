@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"macro":["bitboard","simple_error"],"mod":["bitboard","castling","chess_move","color","file","helpers","piece","rank","sliders","square"]};

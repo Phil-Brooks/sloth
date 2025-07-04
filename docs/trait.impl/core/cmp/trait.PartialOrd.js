@@ -1,0 +1,9 @@
+(function() {
+    var implementors = Object.fromEntries([["cozy_chess_types",[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.87.0/core/cmp/trait.PartialOrd.html\" title=\"trait core::cmp::PartialOrd\">PartialOrd</a> for <a class=\"enum\" href=\"cozy_chess_types/file/enum.File.html\" title=\"enum cozy_chess_types::file::File\">File</a>"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.87.0/core/cmp/trait.PartialOrd.html\" title=\"trait core::cmp::PartialOrd\">PartialOrd</a> for <a class=\"enum\" href=\"cozy_chess_types/piece/enum.Piece.html\" title=\"enum cozy_chess_types::piece::Piece\">Piece</a>"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.87.0/core/cmp/trait.PartialOrd.html\" title=\"trait core::cmp::PartialOrd\">PartialOrd</a> for <a class=\"enum\" href=\"cozy_chess_types/rank/enum.Rank.html\" title=\"enum cozy_chess_types::rank::Rank\">Rank</a>"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.87.0/core/cmp/trait.PartialOrd.html\" title=\"trait core::cmp::PartialOrd\">PartialOrd</a> for <a class=\"enum\" href=\"cozy_chess_types/square/enum.Square.html\" title=\"enum cozy_chess_types::square::Square\">Square</a>"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.87.0/core/cmp/trait.PartialOrd.html\" title=\"trait core::cmp::PartialOrd\">PartialOrd</a> for <a class=\"struct\" href=\"cozy_chess_types/bitboard/struct.BitBoard.html\" title=\"struct cozy_chess_types::bitboard::BitBoard\">BitBoard</a>"]]]]);
+    if (window.register_implementors) {
+        window.register_implementors(implementors);
+    } else {
+        window.pending_implementors = implementors;
+    }
+})()
+//{"start":57,"fragment_lengths":[1438]}
