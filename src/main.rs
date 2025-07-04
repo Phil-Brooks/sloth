@@ -14,7 +14,6 @@ fn main() {
         input.clear();
         std::io::stdin().read_line(&mut input).unwrap();
         let input = input.trim();
-
         if input.starts_with("ucinewgame") {
             board = Board::default();
         } else if input.starts_with("uci") {
@@ -100,7 +99,7 @@ fn main() {
                 }
             }
             //if the input uses wtime/btime, use that, otherwise use movetime
-            let time_remaining = if board.side_to_move() == Color::White {
+            let _time_remaining = if board.side_to_move() == Color::White {
                 if wtime > 0 { wtime } else { movetime }
             } else {
                 if btime > 0 { btime } else { movetime }

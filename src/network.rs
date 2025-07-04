@@ -23,11 +23,11 @@ macro_rules! bitloop {
 
 pub unsafe fn boxed_and_zeroed<T>() -> Box<T> {
     let layout = std::alloc::Layout::new::<T>();
-    let ptr = std::alloc::alloc_zeroed(layout);
+    let ptr = unsafe { std::alloc::alloc_zeroed(layout) };
     if ptr.is_null() {
         std::alloc::handle_alloc_error(layout);
     }
-    Box::from_raw(ptr.cast())
+    unsafe { Box::from_raw(ptr.cast()) }
 }
 
 #[repr(C)]
@@ -62,20 +62,20 @@ impl Network {
         (sum / QA + i32::from(NNUE.output_bias)) * SCALE / QAB
     }
 
-    pub fn get_bucket<const Color: usize>(mut ksq: usize) -> usize {
-        if Color == 1 {
+    pub fn get_bucket<const COLOR: usize>(mut ksq: usize) -> usize {
+        if COLOR == 1 {
             ksq ^= 56;
         }
 
         BUCKETS[ksq]
     }
 
-    pub fn get_base_index<const Color: usize>(side: usize, pc: usize, mut ksq: usize) -> usize {
+    pub fn get_base_index<const COLOR: usize>(side: usize, pc: usize, mut ksq: usize) -> usize {
         if ksq % 8 > 3 {
             ksq ^= 7;
         }
 
-        if Color == 0 {
+        if COLOR == 0 {
             768 * Self::get_bucket::<0>(ksq) + [0, 384][side] + 64 * pc
         } else {
             768 * Self::get_bucket::<1>(ksq) + [384, 0][side] + 64 * pc
