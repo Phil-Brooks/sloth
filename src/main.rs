@@ -3,6 +3,7 @@
 //! Lazy as it uses existing packages where it can. This includes:
 //! - cozy chess
 mod tests;
+mod network;
 use cozy_chess::*;
 
 /// Main entry point - currently handles UCI. This will probably be moved to a different function.
