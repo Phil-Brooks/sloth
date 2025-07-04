@@ -4,12 +4,16 @@
 //! - cozy chess
 mod tests;
 mod evaluation;
+mod search;
 use cozy_chess::*;
+use search::AlphaBetaSearcher;
+
 
 /// Main entry point - currently handles UCI. This will probably be moved to a different function.
 fn main() {
     let mut board: Board = Board::default();
     let mut input: String = String::new();
+    let mut searcher: AlphaBetaSearcher = AlphaBetaSearcher::new();
     loop {
         input.clear();
         std::io::stdin().read_line(&mut input).unwrap();
@@ -76,7 +80,7 @@ fn main() {
                 continue;
             }
             if let Ok(depth) = words[2].parse::<u32>() {
-                let best_move: String = "d4".to_string();//searcher.get_best_move(&board, depth);
+                let best_move: String = searcher.get_best_move(&board, depth);
                 println!("bestmove {}", best_move);
             } else {
                 eprintln!("Invalid depth value: {}", words[2]);
