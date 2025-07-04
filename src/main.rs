@@ -3,7 +3,7 @@
 //! Lazy as it uses existing packages where it can. This includes:
 //! - cozy chess
 mod tests;
-mod network;
+mod evaluation;
 use cozy_chess::*;
 
 /// Main entry point - currently handles UCI. This will probably be moved to a different function.
@@ -69,6 +69,18 @@ fn main() {
                     }
                 }
             }
+        } else if input.starts_with("go depth") {
+            let words: Vec<&str> = input.split_whitespace().collect();
+            if words.len() < 3 {
+                eprintln!("Missing depth value");
+                continue;
+            }
+            if let Ok(depth) = words[2].parse::<u32>() {
+                let best_move: String = "d4".to_string();//searcher.get_best_move(&board, depth);
+                println!("bestmove {}", best_move);
+            } else {
+                eprintln!("Invalid depth value: {}", words[2]);
+        }
         } else if input.starts_with("go") {
             let words: Vec<&str> = input.split_whitespace().collect();
             let mut i: usize = 0;
@@ -107,7 +119,7 @@ fn main() {
             //let best_move: String = searcher.get_best_move(&board, time_remaining);
             //println!("bestmove {}", best_move);
         } else if input.starts_with("eval") {
-            println!("eval: {}cp", network::eval_from_scratch(&board));
+            println!("eval: {}cp", evaluation::eval_from_scratch(&board));
         } else if input.starts_with("quit") {
             break;
         } else {
