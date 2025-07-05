@@ -6,10 +6,11 @@ mod tests;
 mod evaluation;
 mod search;
 use cozy_chess::*;
+
 use search::AlphaBetaSearcher;
 
 
-/// Main entry point - currently handles UCI. This will probably be moved to a different function.
+/// Main entry point - currently handles UCI. 
 fn main() {
     let mut board: Board = Board::default();
     let mut input: String = String::new();
@@ -79,7 +80,7 @@ fn main() {
                 eprintln!("Missing depth value");
                 continue;
             }
-            if let Ok(depth) = words[2].parse::<u32>() {
+            if let Ok(depth) = words[2].parse::<i32>() {
                 let best_move: String = searcher.get_best_move(&board, depth);
                 println!("bestmove {}", best_move);
             } else {
