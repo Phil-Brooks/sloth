@@ -1,3 +1,4 @@
+use std::time::Instant;
 use cozy_chess::*;
 use crate::evaluation;
 
@@ -17,9 +18,9 @@ impl AlphaBetaSearcher {
         }
     }
     pub fn get_best_move(&mut self, board: &Board, depth: i32) -> String {
+        let start_time: Instant = Instant::now();
         let mut current_depth: i32 = 1;
         self.nodes = 0;
-    
         let alpha: i32 = -99999999;
         let beta: i32 = 99999999;
 
@@ -27,11 +28,10 @@ impl AlphaBetaSearcher {
             self.best_move = "".to_string();
             self.root_score = -99999999;
             let score: i32 = self.alpha_beta(board, alpha,  beta, current_depth,0);
-            println!("info depth {} time 0 nodes 0 score cp {} pv {}", current_depth, score, self.best_move);
+            println!("info depth {} time {} nodes 0 score cp {} pv {}", current_depth, start_time.elapsed().as_millis(), score, self.best_move);
             current_depth += 1;
         }
         let final_move = self.best_move.clone();
-
         return final_move;
     }
     fn alpha_beta(&mut self, board: &Board, mut alpha: i32, beta: i32, depthleft: i32,ply: u32) -> i32 {

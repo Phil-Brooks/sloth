@@ -6,10 +6,7 @@ mod tests;
 mod evaluation;
 mod search;
 use cozy_chess::*;
-
 use search::AlphaBetaSearcher;
-
-
 /// Main entry point - currently handles UCI. 
 fn main() {
     let mut board: Board = Board::default();
