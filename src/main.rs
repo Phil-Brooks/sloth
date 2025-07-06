@@ -95,43 +95,33 @@ fn main() {
             } else {
                 eprintln!("Invalid depth value: {}", words[2]);
             }
-        } else if input.starts_with("go") {
+        } else if input.starts_with("go wtime") {
             let words: Vec<&str> = input.split_whitespace().collect();
-            let mut i: usize = 0;
-            let mut wtime: u64 = 0;
-            let mut btime: u64 = 0;
-            let mut movetime: u64 = 0;
-            while i < words.len() {
-                match words[i] {
-                    "wtime" | "btime" | "winc" | "binc" | "movetime" => {
-                        if i + 1 < words.len() {
-                            if let Ok(value) = words[i + 1].parse::<u64>() {
-                                match words[i] {
-                                    "wtime" => wtime = value,
-                                    "btime" => btime = value,
-                                    "movetime" => movetime = value,
-                                    _ => (),
-                                }
-                            } else {
-                                eprintln!("Error parsing {}: Invalid number", words[i]);
-                            }
-                            i += 2;
-                        } else {
-                            eprintln!("Missing value for {}", words[i]);
-                            i += 1;
-                        }
-                    }
-                    _ => i += 1,
-                }
+            if words.len() < 5 {
+                eprintln!("Missing time values");
+                continue;
             }
-            //if the input uses wtime/btime, use that, otherwise use movetime
-            let _time_remaining = if board.side_to_move() == Color::White {
-                if wtime > 0 { wtime } else { movetime }
-            } else {
-                if btime > 0 { btime } else { movetime }
+            let wtime = match words[2].parse::<u64>() {
+                Ok(wtime) => wtime,
+                Err(_) => {
+                    eprintln!("Invalid wtime value: {}", words[2]);
+                    continue;
+                }
             };
-            //let best_move: String = searcher.get_best_move(&board, time_remaining);
-            //println!("bestmove {}", best_move);
+            let btime = match words[4].parse::<u64>() {
+                Ok(btime) => btime,
+                Err(_) => {
+                    eprintln!("Invalid btime value: {}", words[4]);
+                    continue;
+                }
+            };
+            let movetime = if board.side_to_move() == Color::White {
+                wtime 
+            } else {
+                btime
+            };
+            let best_move: String = searcher.get_best_move_time(&board, movetime);
+            println!("bestmove {}", best_move);
         } else if input.starts_with("eval") {
             println!("eval: {}cp", evaluation::eval_from_scratch(&board));
         } else if input.starts_with("quit") {
