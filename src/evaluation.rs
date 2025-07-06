@@ -143,14 +143,7 @@ impl Default for EvalTable {
     }
 }
 fn flatten(acc: &Accumulator, weights: &Accumulator) -> i32 {
-    #[cfg(not(target_feature = "avx2"))]
-    {
         fallback::flatten(acc, weights)
-    }
-    #[cfg(target_feature = "avx2")]
-    unsafe {
-        avx2::flatten(acc, weights)
-    }
 }
 mod fallback {
     use super::{Accumulator, QA};
