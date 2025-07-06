@@ -1,6 +1,6 @@
 use crate::evaluation;
 use cozy_chess::*;
-use std::time::Instant;
+use std::time::{Instant, Duration};
 
 pub struct AlphaBetaSearcher {
     root_score: i32,
@@ -17,7 +17,7 @@ impl AlphaBetaSearcher {
             curr_pv: "".to_string(),
         }
     }
-    pub fn get_best_move(&mut self, board: &Board, depth: i32) -> String {
+    pub fn get_best_move_depth(&mut self, board: &Board, depth: i32) -> String {
         let start_time: Instant = Instant::now();
         let mut current_depth: i32 = 1;
         self.nodes = 0;
@@ -25,6 +25,31 @@ impl AlphaBetaSearcher {
         let beta: i32 = 99999999;
 
         while current_depth <= depth {
+            self.best_move = "".to_string();
+            self.root_score = -99999999;
+            let score: i32 = self.alpha_beta(board, alpha, beta, current_depth, 0);
+            println!(
+                "info depth {} time {} nodes {} score cp {} pv {}",
+                current_depth,
+                start_time.elapsed().as_millis(),
+                self.nodes,
+                score,
+                self.best_move
+            );
+            current_depth += 1;
+        }
+        let final_move = self.best_move.clone();
+        return final_move;
+    }
+    pub fn get_best_move_time(&mut self, board: &Board, movetime: u64) -> String {
+        let start_time: Instant = Instant::now();
+        let limit: Duration = Duration::from_millis(movetime/30);
+        let mut current_depth: i32 = 1;
+        self.nodes = 0;
+        let alpha: i32 = -99999999;
+        let beta: i32 = 99999999;
+
+        while start_time.elapsed() < limit {
             self.best_move = "".to_string();
             self.root_score = -99999999;
             let score: i32 = self.alpha_beta(board, alpha, beta, current_depth, 0);

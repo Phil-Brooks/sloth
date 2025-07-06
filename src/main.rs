@@ -78,7 +78,19 @@ fn main() {
                 continue;
             }
             if let Ok(depth) = words[2].parse::<i32>() {
-                let best_move: String = searcher.get_best_move(&board, depth);
+                let best_move: String = searcher.get_best_move_depth(&board, depth);
+                println!("bestmove {}", best_move);
+            } else {
+                eprintln!("Invalid depth value: {}", words[2]);
+            }
+        } else if input.starts_with("go movetime") {
+            let words: Vec<&str> = input.split_whitespace().collect();
+            if words.len() < 3 {
+                eprintln!("Missing movetime value");
+                continue;
+            }
+            if let Ok(movetime) = words[2].parse::<u64>() {
+                let best_move: String = searcher.get_best_move_time(&board, movetime);
                 println!("bestmove {}", best_move);
             } else {
                 eprintln!("Invalid depth value: {}", words[2]);
