@@ -236,12 +236,20 @@ fn fill_diff(
         let old_boys = bbs[side as usize];
         let new_boys = board.colors(side).0;
 
-        for (piece, &(mut old_bb)) in bbs[Piece::Pawn as usize..=Piece::King as usize].iter().enumerate() {
-            old_bb &= old_boys;
-            let new_bb = board.pieces(Piece::index(piece)).0 & new_boys;
+        for piece in [
+            Piece::Pawn,
+            Piece::Knight,
+            Piece::Bishop,
+            Piece::Rook,
+            Piece::Queen,
+            Piece::King,
+        ] {
+            let idx = piece as usize + 2;
+            let old_bb = bbs[idx] & old_boys;
+            let new_bb = board.pieces(piece).0 & new_boys;
 
-            let wbase = Network::get_base_index::<0>(side as usize, piece, wksq) as u16;
-            let bbase = Network::get_base_index::<1>(side as usize, piece, bksq) as u16;
+            let wbase = Network::get_base_index::<0>(side as usize, piece as usize, wksq) as u16;
+            let bbase = Network::get_base_index::<1>(side as usize, piece as usize, bksq) as u16;
 
             let mut add_diff = new_bb & !old_bb;
             bitloop!(|add_diff, sq| {

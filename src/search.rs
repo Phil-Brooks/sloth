@@ -1,4 +1,5 @@
 use crate::evaluation;
+use crate::evaluation::EvalTable;
 use cozy_chess::*;
 use std::time::{Instant, Duration};
 
@@ -7,6 +8,7 @@ pub struct AlphaBetaSearcher {
     nodes: u64,
     best_move: String,
     curr_pv: String,
+    eval_cache: EvalTable,
 }
 impl AlphaBetaSearcher {
     pub fn new() -> Self {
@@ -15,6 +17,7 @@ impl AlphaBetaSearcher {
             nodes: 0,
             best_move: "".to_string(),
             curr_pv: "".to_string(),
+            eval_cache: Default::default(),
         }
     }
     pub fn get_best_move_depth(&mut self, board: &Board, depth: i32) -> String {
@@ -76,7 +79,7 @@ impl AlphaBetaSearcher {
     ) -> i32 {
         self.nodes += 1;
         if depthleft == 0 {
-            let eval = evaluation::eval_from_scratch(board);
+            let eval = evaluation::eval(board, &mut self.eval_cache);
             return eval;
         }
         let mut best_value = -99999999;
