@@ -78,6 +78,11 @@ impl AlphaBetaSearcher {
         ply: u32,
     ) -> i32 {
         self.nodes += 1;
+        match board.status() {
+            GameStatus::Won => return -320000,
+            GameStatus::Drawn => return 0,
+            GameStatus::Ongoing => {}
+        }
         if depthleft == 0 {
             let eval = evaluation::eval(board, &mut self.eval_cache);
             return eval;
