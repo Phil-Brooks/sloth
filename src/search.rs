@@ -1,12 +1,12 @@
-use std::time::Instant;
-use cozy_chess::*;
 use crate::evaluation;
+use cozy_chess::*;
+use std::time::Instant;
 
 pub struct AlphaBetaSearcher {
     root_score: i32,
     nodes: u64,
-    best_move:String,
-    curr_pv :String,
+    best_move: String,
+    curr_pv: String,
 }
 impl AlphaBetaSearcher {
     pub fn new() -> Self {
@@ -27,14 +27,29 @@ impl AlphaBetaSearcher {
         while current_depth <= depth {
             self.best_move = "".to_string();
             self.root_score = -99999999;
-            let score: i32 = self.alpha_beta(board, alpha,  beta, current_depth,0);
-            println!("info depth {} time {} nodes 0 score cp {} pv {}", current_depth, start_time.elapsed().as_millis(), score, self.best_move);
+            let score: i32 = self.alpha_beta(board, alpha, beta, current_depth, 0);
+            println!(
+                "info depth {} time {} nodes {} score cp {} pv {}",
+                current_depth,
+                start_time.elapsed().as_millis(),
+                self.nodes,
+                score,
+                self.best_move
+            );
             current_depth += 1;
         }
         let final_move = self.best_move.clone();
         return final_move;
     }
-    fn alpha_beta(&mut self, board: &Board, mut alpha: i32, beta: i32, depthleft: i32,ply: u32) -> i32 {
+    fn alpha_beta(
+        &mut self,
+        board: &Board,
+        mut alpha: i32,
+        beta: i32,
+        depthleft: i32,
+        ply: u32,
+    ) -> i32 {
+        self.nodes += 1;
         if depthleft == 0 {
             let eval = evaluation::eval_from_scratch(board);
             return eval;
@@ -52,12 +67,14 @@ impl AlphaBetaSearcher {
             let mut new_board = board.clone();
             let old_pv = self.curr_pv.clone();
             new_board.play_unchecked(*mov);
-            self.curr_pv = (format!("{} {}", self.curr_pv, mov.to_string())).trim().to_string();
-            let score = -self.alpha_beta(&new_board, -beta, -alpha, depthleft - 1,ply+1);
+            self.curr_pv = (format!("{} {}", self.curr_pv, mov.to_string()))
+                .trim()
+                .to_string();
+            let score = -self.alpha_beta(&new_board, -beta, -alpha, depthleft - 1, ply + 1);
             if score > best_value {
                 if ply == 0 {
-                    self.root_score = score; 
-                    self.best_move = self.curr_pv.clone(); 
+                    self.root_score = score;
+                    self.best_move = self.curr_pv.clone();
                 }
                 best_value = score;
                 if score > alpha {

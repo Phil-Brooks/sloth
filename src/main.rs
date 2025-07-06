@@ -2,12 +2,12 @@
 //!
 //! Lazy as it uses existing packages where it can. This includes:
 //! - cozy chess
-mod tests;
 mod evaluation;
 mod search;
+mod tests;
 use cozy_chess::*;
 use search::AlphaBetaSearcher;
-/// Main entry point - currently handles UCI. 
+/// Main entry point - currently handles UCI.
 fn main() {
     let mut board: Board = Board::default();
     let mut input: String = String::new();
@@ -82,7 +82,7 @@ fn main() {
                 println!("bestmove {}", best_move);
             } else {
                 eprintln!("Invalid depth value: {}", words[2]);
-        }
+            }
         } else if input.starts_with("go") {
             let words: Vec<&str> = input.split_whitespace().collect();
             let mut i: usize = 0;
