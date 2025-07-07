@@ -78,7 +78,7 @@ fn main() {
                 continue;
             }
             if let Ok(depth) = words[2].parse::<i32>() {
-                let best_move: String = searcher.get_best_move_depth(&board, depth);
+                let best_move: String = searcher.get_best_move(&board, 9999999999, depth);
                 println!("bestmove {}", best_move);
             } else {
                 eprintln!("Invalid depth value: {}", words[2]);
@@ -90,7 +90,7 @@ fn main() {
                 continue;
             }
             if let Ok(movetime) = words[2].parse::<u64>() {
-                let best_move: String = searcher.get_best_move_time(&board, movetime);
+                let best_move: String = searcher.get_best_move(&board, movetime, 999);
                 println!("bestmove {}", best_move);
             } else {
                 eprintln!("Invalid depth value: {}", words[2]);
@@ -116,11 +116,11 @@ fn main() {
                 }
             };
             let movetime = if board.side_to_move() == Color::White {
-                wtime 
+                wtime
             } else {
                 btime
             };
-            let best_move: String = searcher.get_best_move_time(&board, movetime);
+            let best_move: String = searcher.get_best_move(&board, movetime, 999);
             println!("bestmove {}", best_move);
         } else if input.starts_with("eval") {
             println!("eval: {}cp", evaluation::eval_from_scratch(&board));
