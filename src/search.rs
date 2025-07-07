@@ -8,6 +8,7 @@ const TT_SIZE: usize = 1 << 24;
 pub struct AlphaBetaSearcher {
     tt: Vec<TTEntry>, // Transposition Table
     nodes: u64,
+    best_move: String,
     eval_cache: EvalTable,
 }
 #[derive(Clone, Copy)]
@@ -40,6 +41,7 @@ impl AlphaBetaSearcher {
                 TT_SIZE
             ],
             nodes: 0,
+            best_move: "".to_string(),
             eval_cache: Default::default(),
         }
     }
@@ -63,7 +65,7 @@ impl AlphaBetaSearcher {
             );
             current_depth += 1;
         }
-        let final_move = self.getbm(board);
+        let final_move = self.best_move.clone();
         return final_move;
     }
     fn alpha_beta(
@@ -81,7 +83,7 @@ impl AlphaBetaSearcher {
             GameStatus::Ongoing => {}
         }
         if depthleft == 0 {
-            let eval = evaluation::eval(board, &mut self.eval_cache);
+            let eval = self.qs(board, alpha, beta, ply); //evaluation::eval(board, &mut self.eval_cache);
             return eval;
         }
 
@@ -116,6 +118,9 @@ impl AlphaBetaSearcher {
             new_board.play_unchecked(*mov);
             let score = -self.alpha_beta(&new_board, -beta, -alpha, depthleft - 1, ply + 1);
             if score > best_value {
+                if ply == 0 {
+                    self.best_move = mov.to_string();
+                }
                 best_move = *mov;
                 best_value = score;
                 if best_value > alpha {
@@ -154,6 +159,17 @@ impl AlphaBetaSearcher {
         }
         return best_value;
     }
+    fn qs(&mut self, board: &Board, mut alpha: i32, beta: i32, mut ply: u32) -> i32 {
+        self.nodes += 1;
+        match board.status() {
+            GameStatus::Won => return -320000 + (ply as i32) * 10,
+            GameStatus::Drawn => return 0,
+            GameStatus::Ongoing => {}
+        }
+        let stand_pat = evaluation::eval(board, &mut self.eval_cache);
+        return stand_pat;
+    }
+
     fn getpv(&self, iboard: &Board) -> String {
         let mut board = iboard.clone();
         let entry: TTEntry = self.tt[board.hash() as usize % TT_SIZE];
@@ -170,11 +186,5 @@ impl AlphaBetaSearcher {
             }
         }
         return pv;
-    }
-    fn getbm(&self, iboard: &Board) -> String {
-        let board = iboard.clone();
-        let entry: TTEntry = self.tt[board.hash() as usize % TT_SIZE];
-        let bm = entry.best_move;
-        return bm.to_string();
     }
 }
