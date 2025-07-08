@@ -72,34 +72,32 @@ impl AlphaBetaSearcher {
         &mut self,
         board: &Board,
         mut alpha: i32,
-        beta: i32,
+        mut beta: i32,
         depthleft: i32,
-        ply: u32,
+        ply: i32,
     ) -> i32 {
         self.nodes += 1;
         match board.status() {
-            GameStatus::Won => return -320000 + (ply as i32) * 10,
+            GameStatus::Won => return -320000 + ply * 10,
             GameStatus::Drawn => return 0,
             GameStatus::Ongoing => {}
         }
         if depthleft == 0 {
-            let eval = self.qs(board, alpha, beta, ply); //evaluation::eval(board, &mut self.eval_cache);
+            let eval = self.qs(board, alpha, beta, ply);
             return eval;
         }
 
         let root: bool = ply == 0;
         let pv_node: bool = beta - alpha > 1;
         // probe TT
-        let mut new_alpha: i32 = alpha;
-        let mut new_beta: i32 = beta;
         let entry: TTEntry = self.tt[board.hash() as usize % TT_SIZE];
         if entry.hash == board.hash() && entry.depth >= depthleft && !root && !pv_node {
             match entry.node_type {
                 NodeType::Exact => return entry.score,
-                NodeType::LowerBound => new_alpha = alpha.max(entry.score),
-                NodeType::UpperBound => new_beta = beta.min(entry.score),
+                NodeType::LowerBound => alpha = alpha.max(entry.score),
+                NodeType::UpperBound => beta = beta.min(entry.score),
             }
-            if new_alpha >= new_beta {
+            if alpha >= beta {
                 return entry.score;
             }
         }
@@ -159,15 +157,95 @@ impl AlphaBetaSearcher {
         }
         return best_value;
     }
-    fn qs(&mut self, board: &Board, mut alpha: i32, beta: i32, mut ply: u32) -> i32 {
+    fn qs(&mut self, board: &Board, mut alpha: i32, beta: i32, ply:i32) -> i32 {
         self.nodes += 1;
         match board.status() {
-            GameStatus::Won => return -320000 + (ply as i32) * 10,
+            GameStatus::Won => return -320000 + ply * 10,
             GameStatus::Drawn => return 0,
             GameStatus::Ongoing => {}
         }
         let stand_pat = evaluation::eval(board, &mut self.eval_cache);
-        return stand_pat;
+        if stand_pat >= beta {
+            return beta;
+        }
+        if stand_pat > alpha {
+            alpha = stand_pat;
+        }
+        // probe TT
+        let entry: TTEntry = self.tt[board.hash() as usize % TT_SIZE];
+        if entry.hash == board.hash() {
+            match entry.node_type {
+                NodeType::Exact => return entry.score,
+                NodeType::LowerBound => {
+                    if entry.score >= beta {
+                        return entry.score;
+                    }
+                },
+                NodeType::UpperBound => {
+                    if entry.score <= alpha {
+                        return entry.score;
+                    }
+                },
+            }
+        }
+        //generate all caotures and store them in a vector
+        let mut moves = Vec::new();
+        let their_pieces = board.colors(!board.side_to_move());
+        board.generate_moves(|p| {
+            let mut capture_moves = p;
+            capture_moves.to &= their_pieces;
+            for mv in capture_moves {
+                moves.push(mv);
+            }
+            false
+        });
+        if moves.is_empty() {
+            return stand_pat;
+        }
+        let mut best_value = stand_pat;
+        let mut best_move:Move;
+        for mov in moves.iter() {
+            let mut new_board = board.clone();
+            new_board.play_unchecked(*mov);
+            let score = -self.qs(&new_board, -beta, -alpha, ply + 1);
+            if score > best_value {
+                best_move = *mov;
+                best_value = score;
+                if best_value > alpha {
+                    alpha = best_value; // alpha acts like max in MiniMax
+                    if alpha >= beta {
+                        let tt_entry: TTEntry = TTEntry {
+                            hash: board.hash(),
+                            depth: ply,
+                            score: best_value,
+                            best_move: best_move,
+                            node_type: NodeType::LowerBound,
+                        };
+                        self.tt[board.hash() as usize % TT_SIZE] = tt_entry;
+                        return best_value;
+                    } else {
+                        let tt_entry: TTEntry = TTEntry {
+                            hash: board.hash(),
+                            depth: ply,
+                            score: best_value,
+                            best_move: best_move,
+                            node_type: NodeType::Exact,
+                        };
+                        self.tt[board.hash() as usize % TT_SIZE] = tt_entry;
+                    }
+                } else {
+                    let tt_entry: TTEntry = TTEntry {
+                        hash: board.hash(),
+                        depth: ply,
+                        score: best_value,
+                        best_move: best_move,
+                        node_type: NodeType::UpperBound,
+                    };
+                    self.tt[board.hash() as usize % TT_SIZE] = tt_entry;
+                }
+            }
+        }
+        return best_value;
     }
 
     fn getpv(&self, iboard: &Board) -> String {
