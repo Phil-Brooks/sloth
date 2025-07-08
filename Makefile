@@ -1,4 +1,4 @@
-VER = 0.1.9
+VER = 0.2.0
 EXE = sloth
 
 ifeq ($(OS),Windows_NT)

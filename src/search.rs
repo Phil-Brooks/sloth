@@ -54,7 +54,7 @@ impl AlphaBetaSearcher {
     pub fn get_best_move(&mut self, board: &Board, movetime: u64, depth: i32) -> String {
         self.start = Instant::now();
         let fullmovetime: Duration = Duration::from_millis(movetime);
-        let tolerance: Duration = Duration::from_millis(300);
+        let tolerance: Duration = Duration::from_millis(200);
         self.limit = if fullmovetime > 2 * tolerance {
             fullmovetime - tolerance
         } else {
@@ -106,9 +106,10 @@ impl AlphaBetaSearcher {
         }
 
         let root: bool = ply == 0;
+        let pv_node: bool = beta - alpha > 1;
         // probe TT
         let entry: TTEntry = self.tt[board.hash() as usize % TT_SIZE];
-        if entry.hash == board.hash() && entry.depth >= depthleft && !root {
+        if entry.hash == board.hash() && entry.depth >= depthleft && !root && !pv_node{
             match entry.node_type {
                 NodeType::Exact => return entry.score,
                 NodeType::LowerBound => alpha = alpha.max(entry.score),
@@ -207,6 +208,7 @@ impl AlphaBetaSearcher {
                 }
             }
         }
+
         //generate all caotures and store them in a vector
         let mut moves = Vec::new();
         let their_pieces = board.colors(!board.side_to_move());
