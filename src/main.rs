@@ -80,6 +80,7 @@ fn main() {
             if let Ok(depth) = words[2].parse::<i32>() {
                 let best_move: String = searcher.get_best_move(&board, 9999999999, depth);
                 println!("bestmove {}", best_move);
+                searcher = AlphaBetaSearcher::new();
             } else {
                 eprintln!("Invalid depth value: {}", words[2]);
             }
@@ -92,6 +93,7 @@ fn main() {
             if let Ok(movetime) = words[2].parse::<u64>() {
                 let best_move: String = searcher.get_best_move(&board, movetime, 999);
                 println!("bestmove {}", best_move);
+                searcher = AlphaBetaSearcher::new();
             } else {
                 eprintln!("Invalid depth value: {}", words[2]);
             }
@@ -127,14 +129,15 @@ fn main() {
                     if movestogo > 0 {
                         divisor = movestogo;
                     } else {
-                        eprintln!("Invalid movestogo value: {}", words[words.len()-1]);
+                        println!("Invalid movestogo value: {}", words[words.len()-1]);
                     }
                 } else {
-                    eprintln!("Invalid movestogo value: {}", words[words.len()-1]);
+                    println!("Invalid movestogo value: {}", words[words.len()-1]);
                 }
             }
             let best_move: String = searcher.get_best_move(&board, movetime/divisor, 999);
             println!("bestmove {}", best_move);
+            searcher = AlphaBetaSearcher::new();
         } else if input.starts_with("eval") {
             println!("eval: {}cp", evaluation::eval_from_scratch(&board));
         } else if input.starts_with("quit") {

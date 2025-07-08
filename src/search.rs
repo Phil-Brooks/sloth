@@ -3,12 +3,13 @@ use crate::evaluation::EvalTable;
 use cozy_chess::*;
 use std::str::FromStr;
 use std::time::{Duration, Instant};
-const TT_SIZE: usize = 1 << 24;
+const TT_SIZE: usize = 1 << 26;
 
 pub struct AlphaBetaSearcher {
     tt: Vec<TTEntry>, // Transposition Table
     nodes: u64,
-    best_moves: [String;50],
+    best_move: String,
+    prev_best_move: String,
     eval_cache: EvalTable,
     start: Instant,
     limit: Duration,
@@ -43,7 +44,8 @@ impl AlphaBetaSearcher {
                 TT_SIZE
             ],
             nodes: 0,
-            best_moves: std::array::from_fn(|_| String::new()),
+            best_move: String::new(),
+            prev_best_move: String::new(),
             eval_cache: Default::default(),
             start: Instant::now(),
             limit: Duration::from_millis(0),
@@ -52,11 +54,11 @@ impl AlphaBetaSearcher {
     pub fn get_best_move(&mut self, board: &Board, movetime: u64, depth: i32) -> String {
         self.start = Instant::now();
         let fullmovetime: Duration = Duration::from_millis(movetime);
-        let tolerance: Duration = Duration::from_millis(1000);
+        let tolerance: Duration = Duration::from_millis(300);
         self.limit = if fullmovetime > 2 * tolerance {
             fullmovetime - tolerance
         } else {
-            fullmovetime / 4
+            fullmovetime / 2
         };
         let mut current_depth: i32 = 1;
         self.nodes = 0;
@@ -64,10 +66,11 @@ impl AlphaBetaSearcher {
         let beta: i32 = 99999999;
 
         while self.start.elapsed() < self.limit && current_depth <= depth {
+            self.prev_best_move = self.best_move.clone();
             let score: i32 = self.alpha_beta(board, alpha, beta, current_depth, 0);
             if self.start.elapsed() > self.limit{
                 println!("exceeded time limit, returning best move"); 
-                break;
+                return self.prev_best_move.clone();
             }
             println!(
                 "info depth {} time {} nodes {} score cp {} pv {}",
@@ -79,7 +82,7 @@ impl AlphaBetaSearcher {
             );
             current_depth += 1;
         }
-        let final_move = self.best_moves[current_depth as usize - 1].clone();
+        let final_move = self.best_move.clone();
         return final_move;
     }
     fn alpha_beta(
@@ -90,6 +93,7 @@ impl AlphaBetaSearcher {
         depthleft: i32,
         ply: i32,
     ) -> i32 {
+        if self.start.elapsed() > self.limit && ply > 0 {return 0;}
         self.nodes += 1;
         match board.status() {
             GameStatus::Won => return -320000 + ply * 10,
@@ -102,10 +106,9 @@ impl AlphaBetaSearcher {
         }
 
         let root: bool = ply == 0;
-        let pv_node: bool = beta - alpha > 1;
         // probe TT
         let entry: TTEntry = self.tt[board.hash() as usize % TT_SIZE];
-        if entry.hash == board.hash() && entry.depth >= depthleft && !root && !pv_node {
+        if entry.hash == board.hash() && entry.depth >= depthleft && !root {
             match entry.node_type {
                 NodeType::Exact => return entry.score,
                 NodeType::LowerBound => alpha = alpha.max(entry.score),
@@ -131,7 +134,7 @@ impl AlphaBetaSearcher {
             let score = -self.alpha_beta(&new_board, -beta, -alpha, depthleft - 1, ply + 1);
             if score > best_value {
                 if ply == 0 {
-                    self.best_moves[depthleft as usize] = mov.to_string();
+                    self.best_move = mov.to_string();
                 }
                 best_move = *mov;
                 best_value = score;
