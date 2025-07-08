@@ -120,7 +120,20 @@ fn main() {
             } else {
                 btime
             };
-            let best_move: String = searcher.get_best_move(&board, movetime, 999);
+            let mut divisor = 50;
+            if input.contains("movestogo") {
+                let words: Vec<&str> = input.split_whitespace().collect();
+                if let Ok(movestogo) = words[words.len()-1].parse::<u64>() {
+                    if movestogo > 0 {
+                        divisor = movestogo;
+                    } else {
+                        eprintln!("Invalid movestogo value: {}", words[words.len()-1]);
+                    }
+                } else {
+                    eprintln!("Invalid movestogo value: {}", words[words.len()-1]);
+                }
+            }
+            let best_move: String = searcher.get_best_move(&board, movetime/divisor, 999);
             println!("bestmove {}", best_move);
         } else if input.starts_with("eval") {
             println!("eval: {}cp", evaluation::eval_from_scratch(&board));

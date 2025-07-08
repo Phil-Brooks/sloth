@@ -11,12 +11,13 @@ The final file is **search.rs** which is very much a WIP. It has the most basic 
 
     * Negamax search
     * Transposition table
+    * Quiescence Search
 
-The engine performs very poorly.
+The engine already performs decently.
 
 ## Plans
 
-To add enough to the search to make it perform decently. This will definitely include adding **Quiescence Search**. Other features will only be added if they make a large differnce as the intention is to keep this as simple as possible.
+To add enough to the search to make it perform well. Features will only be added if they make a large differnce as the intention is to keep this as simple as possible.
 
 ## Purpose
 

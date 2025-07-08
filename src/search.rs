@@ -47,7 +47,13 @@ impl AlphaBetaSearcher {
     }
     pub fn get_best_move(&mut self, board: &Board, movetime: u64, depth: i32) -> String {
         let start_time: Instant = Instant::now();
-        let limit: Duration = Duration::from_millis(movetime / 30);
+        let fullmovetime: Duration = Duration::from_millis(movetime);
+        let tolerance: Duration = Duration::from_millis(1000);
+        let limit = if fullmovetime > 2 * tolerance {
+            fullmovetime - tolerance
+        } else {
+            fullmovetime / 4
+        };
         let mut current_depth: i32 = 1;
         self.nodes = 0;
         let alpha: i32 = -99999999;
@@ -157,7 +163,7 @@ impl AlphaBetaSearcher {
         }
         return best_value;
     }
-    fn qs(&mut self, board: &Board, mut alpha: i32, beta: i32, ply:i32) -> i32 {
+    fn qs(&mut self, board: &Board, mut alpha: i32, beta: i32, ply: i32) -> i32 {
         self.nodes += 1;
         match board.status() {
             GameStatus::Won => return -320000 + ply * 10,
@@ -180,12 +186,12 @@ impl AlphaBetaSearcher {
                     if entry.score >= beta {
                         return entry.score;
                     }
-                },
+                }
                 NodeType::UpperBound => {
                     if entry.score <= alpha {
                         return entry.score;
                     }
-                },
+                }
             }
         }
         //generate all caotures and store them in a vector
@@ -203,7 +209,7 @@ impl AlphaBetaSearcher {
             return stand_pat;
         }
         let mut best_value = stand_pat;
-        let mut best_move:Move;
+        let mut best_move: Move;
         for mov in moves.iter() {
             let mut new_board = board.clone();
             new_board.play_unchecked(*mov);
@@ -247,7 +253,6 @@ impl AlphaBetaSearcher {
         }
         return best_value;
     }
-
     fn getpv(&self, iboard: &Board) -> String {
         let mut board = iboard.clone();
         let entry: TTEntry = self.tt[board.hash() as usize % TT_SIZE];
