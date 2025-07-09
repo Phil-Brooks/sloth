@@ -273,7 +273,12 @@ impl AlphaBetaSearcher {
         let entry: TTEntry = self.tt[board.hash() as usize % TT_SIZE];
         let mut bm = entry.best_move;
         let mut pv = bm.to_string();
+        let mut ct = 0;
         loop {
+            ct += 1;
+            if ct > 10 {
+                break; // prevent infinite loop
+            }
             board.play_unchecked(bm);
             let entry: TTEntry = self.tt[board.hash() as usize % TT_SIZE];
             if entry.hash == board.hash() {

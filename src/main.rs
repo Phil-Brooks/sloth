@@ -140,6 +140,31 @@ fn main() {
             searcher = AlphaBetaSearcher::new();
         } else if input.starts_with("eval") {
             println!("eval: {}cp", evaluation::eval_from_scratch(&board));
+        } else if input.starts_with("selfplay") {
+            let movetime:u64 = 5000;
+            for i in 0..10 {
+                println!("Selfplay game {}", i + 1);
+                board = Board::default();
+                while board.status() == GameStatus::Ongoing {
+                    let best_move: String = searcher.get_best_move(&board, movetime, 999);
+                    if best_move.is_empty() {
+                        println!("No valid moves found, exiting selfplay.");
+                        break;
+                    }
+                    match util::parse_uci_move(&board, &best_move) {
+                        Ok(ucimove) => {
+                            board.play(ucimove);
+                            println!("Played move: {}", best_move);
+                        }
+                        Err(e) => {
+                            eprintln!("Failed to play move: {}. Error: {:?}", best_move, e);
+                            break;
+                        }
+                    }
+                }
+            println!("Selfplay ended with status: {:?}", board.status());
+            println!("Final board position:\n{}", board.to_string());
+            }
         } else if input.starts_with("quit") {
             break;
         } else {
