@@ -3,7 +3,7 @@ use crate::evaluation::EvalTable;
 use cozy_chess::*;
 use std::str::FromStr;
 use std::time::{Duration, Instant};
-const TT_SIZE: usize = 1 << 26;
+const TT_SIZE: usize = 1 << 25;
 
 pub struct AlphaBetaSearcher {
     tt: Vec<TTEntry>, // Transposition Table
