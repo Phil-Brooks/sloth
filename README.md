@@ -13,7 +13,7 @@ The final file is **search.rs** which is very much a WIP. It has the most basic 
     * Transposition table
     * Quiescence Search
 
-The engine already performs decently.
+The engine already performs decently (about 2100?).
 
 ## Plans
 
