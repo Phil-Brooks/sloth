@@ -123,25 +123,28 @@ fn main() {
             let mut divisor = 50;
             if input.contains("movestogo") {
                 let words: Vec<&str> = input.split_whitespace().collect();
-                if let Ok(movestogo) = words[words.len()-1].parse::<u64>() {
+                if let Ok(movestogo) = words[words.len() - 1].parse::<u64>() {
                     if movestogo > 0 {
                         divisor = movestogo;
                     } else {
-                        println!("Invalid movestogo value: {}", words[words.len()-1]);
+                        println!("Invalid movestogo value: {}", words[words.len() - 1]);
                     }
                 } else {
-                    println!("Invalid movestogo value: {}", words[words.len()-1]);
+                    println!("Invalid movestogo value: {}", words[words.len() - 1]);
                 }
             }
-            let best_move: String = searcher.get_best_move(&board, movetime/divisor, 999);
+            let best_move: String = searcher.get_best_move(&board, movetime / divisor, 999);
             println!("bestmove {}", best_move);
         } else if input.starts_with("eval") {
             println!("eval: {}cp", evaluation::eval_from_scratch(&board));
         } else if input.starts_with("selfplay") {
-            let movetime:u64 = 5000;
+            let movetime: u64 = 5000;
             for i in 0..10 {
                 println!("Selfplay game {}", i + 1);
                 board = Board::default();
+                //TODO:record all hoard hashes to allow identifying 3 move repetitions - as otherewise game never finishes
+                // optionally record all moves in the game so could create a PGN file
+
                 while board.status() == GameStatus::Ongoing {
                     let best_move: String = searcher.get_best_move(&board, movetime, 999);
                     if best_move.is_empty() {
@@ -159,8 +162,8 @@ fn main() {
                         }
                     }
                 }
-            println!("Selfplay ended with status: {:?}", board.status());
-            println!("Final board position:\n{}", board.to_string());
+                println!("Selfplay ended with status: {:?}", board.status());
+                println!("Final board position:\n{}", board.to_string());
             }
         } else if input.starts_with("quit") {
             break;
